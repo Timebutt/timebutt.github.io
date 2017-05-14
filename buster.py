@@ -92,6 +92,9 @@ def main():
                     continue
 
                 new_href = re.sub(r'(rss/index\.html)|((?<!\.)rss/?)$', 'rss/index.rss', href)
+                if new_href[0] == "/":
+                    new_href = new_href[1:]
+
                 if not abs_url_regex.search(href):
                     new_href = re.sub(r'/index\.html$', '/', new_href)
 
