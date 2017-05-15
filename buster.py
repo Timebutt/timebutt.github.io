@@ -63,7 +63,6 @@ def main():
             for filename in filenames:
                 if is_windows and html_regex.match(filename):
                     path = ("{0}").format(os.path.join(root, filename).replace("\\", "/"))
-                    print("KLETSE: " + str(path))
                     with open(path, "r+") as f:
                         file_contents = f.read()
                         file_contents = file_contents.replace(arguments['--domain'], "")
@@ -86,6 +85,7 @@ def main():
         def fixLinks(text, parser):
 
             d = PyQuery(bytes(bytearray(text, encoding='utf-8')), parser=parser)
+
             for element in d('a, link'):
                 e = PyQuery(element)
                 href = e.attr('href')
@@ -104,7 +104,8 @@ def main():
                     e.attr('href', new_href)
                     print "\t", href, "=>", new_href
 
-            for element in d('script'):
+            # Make sure all scripts are referenced correctly
+            for element in d('script, img'):
                 e = PyQuery(element)
                 src = e.attr('src')
 
@@ -119,20 +120,18 @@ def main():
                     e.attr('src', new_src)
                     print "\t", src, "=>", new_src
 
-
-            print("zo ziet da er dan uit")
-            print(d)
-
             # Uncommented this because it seemed to remove the ending </html> tag for some reason
             #if parser == 'html':
-            #    return d.html(method='html').encode('utf8')
+            #     return d.html(method='html').encode('utf8')
             return d.__unicode__().encode('utf8')
 
         # fix links in all html files
+        scripts_reg = re.compile(r"(<script.*?/>)", re.IGNORECASE)
         for root, dirs, filenames in os.walk(static_path):
             for filename in fnmatch.filter(filenames, '*.html'):
                 filepath = os.path.join(root, filename)
                 parser = 'html'
+
                 if root.endswith(os.path.sep + 'rss'):  # rename rss index.html to index.rss
                     parser = 'xml'
                     newfilepath = os.path.join(root, os.path.splitext(filename)[0] + '.rss')
@@ -149,6 +148,13 @@ def main():
                 print 'fixing links in ', filepath
                 newtext = fixLinks(filetext, parser)
                 with open(filepath, 'w') as f:
+
+                    # Make sure the scripts are not terminated like this '/>'
+                    # Stupid fix, but it works and maintains menu functionality in casper
+                    output = scripts_reg.findall(newtext)
+                    for script_item in output:
+                        newtext = newtext.replace(script_item, script_item[:-2] + "></script>")
+
                     f.write(newtext)
 
     elif arguments['preview']:
