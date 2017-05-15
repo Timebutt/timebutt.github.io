@@ -43,7 +43,7 @@ def main():
     if arguments['generate']:
         command = ("wget "
                    "--recursive "             # follow links to download entire site
-                   "{2} "         # make links relative
+                   "{2} "                     # make links relative
                    "--page-requisites "       # grab everything: css / inlined images
                    "--no-parent "             # don't go to parent level
                    "--directory-prefix {1} "  # download contents to static/ folder
@@ -63,6 +63,7 @@ def main():
             for filename in filenames:
                 if is_windows and html_regex.match(filename):
                     path = ("{0}").format(os.path.join(root, filename).replace("\\", "/"))
+                    print("KLETSE: " + str(path))
                     with open(path, "r+") as f:
                         file_contents = f.read()
                         file_contents = file_contents.replace(arguments['--domain'], "")
@@ -101,6 +102,21 @@ def main():
                 if href != new_href:
                     e.attr('href', new_href)
                     print "\t", href, "=>", new_href
+
+            for element in d('script'):
+                e = PyQuery(element)
+                src = e.attr('src')
+
+                if src is None:
+                    continue
+
+                new_src = re.sub(r'(rss/index\.html)|((?<!\.)rss/?)$', 'rss/index.rss', src)
+                if new_src[0] == "/" and new_src[:2] != "//":
+                    new_src = "/static" + new_src
+
+                if src != new_src:
+                    e.attr('src', new_src)
+                    print "\t", src, "=>", new_src
 
             if parser == 'html':
                 return d.html(method='html').encode('utf8')
