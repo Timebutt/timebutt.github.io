@@ -84,6 +84,7 @@ def main():
         # remove superfluous "index.html" from relative hyperlinks found in text
         abs_url_regex = re.compile(r'^(?:[a-z]+:)?//', flags=re.IGNORECASE)
         def fixLinks(text, parser):
+
             d = PyQuery(bytes(bytearray(text, encoding='utf-8')), parser=parser)
             for element in d('a, link'):
                 e = PyQuery(element)
@@ -118,8 +119,13 @@ def main():
                     e.attr('src', new_src)
                     print "\t", src, "=>", new_src
 
-            if parser == 'html':
-                return d.html(method='html').encode('utf8')
+
+            print("zo ziet da er dan uit")
+            print(d)
+
+            # Uncommented this because it seemed to remove the ending </html> tag for some reason
+            #if parser == 'html':
+            #    return d.html(method='html').encode('utf8')
             return d.__unicode__().encode('utf8')
 
         # fix links in all html files
