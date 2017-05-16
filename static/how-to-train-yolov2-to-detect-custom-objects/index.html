@@ -1,4 +1,4 @@
-<html><head><meta charset="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>How to train YOLOv2 to detect custom objects</title><meta name="description" content=""/><meta name="HandheldFriendly" content="True"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><link rel="shortcut icon" href="/static/favicon.ico"/><link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400"/><link rel="stylesheet" type="text/css" href="/static/assets/css/screen.css?v=c848bca020"/><link rel="canonical" href="http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/"/><meta name="referrer" content="no-referrer-when-downgrade"/><link rel="amphtml" href="http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/amp/"/><meta property="og:site_name" content="Timebutt.io"/><meta property="og:type" content="article"/><meta property="og:title" content="How to train YOLOv2 to detect custom objects"/><meta property="og:description" content="In this article, we will be going over all the steps required to install and train Joseph Redmon's YOLOv2 state of the art real-time object detection system. Its technological prowess is explained in detail in the paper YOLO9000: Better, Faster, Stronger and on the project website. YOLOv2 is written for"/><meta property="og:url" content="http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/"/><meta property="article:published_time" content="2017-05-16T08:04:05.000Z"/><meta property="article:modified_time" content="2017-05-16T15:04:23.000Z"/><meta property="article:publisher" content="https://www.facebook.com/Timebutt"/><meta property="article:author" content="https://www.facebook.com/Timebutt"/><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="How to train YOLOv2 to detect custom objects"/><meta name="twitter:description" content="In this article, we will be going over all the steps required to install and train Joseph Redmon's YOLOv2 state of the art real-time object detection system. Its technological prowess is explained in detail in the paper YOLO9000: Better, Faster, Stronger and on the project website. YOLOv2 is written for"/><meta name="twitter:url" content="http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/"/><meta name="twitter:label1" content="Written by"/><meta name="twitter:data1" content="Nils Tijtgat"/><script type="application/ld+json">
+<html><head><meta charset="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>How to train YOLOv2 to detect custom objects</title><meta name="description" content=""/><meta name="HandheldFriendly" content="True"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><link rel="shortcut icon" href="/static/favicon.ico"/><link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400"/><link rel="stylesheet" type="text/css" href="/static/assets/css/screen.css?v=c848bca020"/><link rel="canonical" href="http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/"/><meta name="referrer" content="no-referrer-when-downgrade"/><link rel="amphtml" href="http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/amp/"/><meta property="og:site_name" content="Timebutt.io"/><meta property="og:type" content="article"/><meta property="og:title" content="How to train YOLOv2 to detect custom objects"/><meta property="og:description" content="In this article, we will be going over all the steps required to install and train Joseph Redmon's YOLOv2 state of the art real-time object detection system. Its technological prowess is explained in detail in the paper YOLO9000: Better, Faster, Stronger and on the project website. YOLOv2 is written for"/><meta property="og:url" content="http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/"/><meta property="article:published_time" content="2017-05-16T08:04:05.000Z"/><meta property="article:modified_time" content="2017-05-16T15:40:14.000Z"/><meta property="article:publisher" content="https://www.facebook.com/Timebutt"/><meta property="article:author" content="https://www.facebook.com/Timebutt"/><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="How to train YOLOv2 to detect custom objects"/><meta name="twitter:description" content="In this article, we will be going over all the steps required to install and train Joseph Redmon's YOLOv2 state of the art real-time object detection system. Its technological prowess is explained in detail in the paper YOLO9000: Better, Faster, Stronger and on the project website. YOLOv2 is written for"/><meta name="twitter:url" content="http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/"/><meta name="twitter:label1" content="Written by"/><meta name="twitter:data1" content="Nils Tijtgat"/><script type="application/ld+json">
 {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -19,7 +19,7 @@
     "headline": "How to train YOLOv2 to detect custom objects",
     "url": "http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/",
     "datePublished": "2017-05-16T08:04:05.000Z",
-    "dateModified": "2017-05-16T15:04:23.000Z",
+    "dateModified": "2017-05-16T15:40:14.000Z",
     "description": "In this article, we will be going over all the steps required to install and train Joseph Redmon&amp;#x27;s YOLOv2 state of the art real-time object detection system. Its technological prowess is explained in detail in the paper YOLO9000: Better, Faster, Stronger and on the project website. YOLOv2 is written for",
     "mainEntityOfPage": {
         "@type": "WebPage",
@@ -97,13 +97,13 @@ Next, let's fire up the tool. Seeing as how I have both <em>Python 3.6.0</em> an
 
 <p>Time to put on some good music and start labeling! Once you're done, the <em>main.py</em> script should have created the labels for your images in a folder <em>Labels/000</em>. If you are training multiple custom categories, every category will have its own folder.</p>
 
-<div id="center">  
+<div id="center" style="height: 165px;">  
     <div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
     <img src="/static/content/images/2017/05/screen9.PNG"/></div><div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
     <img src="/static/content/images/2017/05/screen8.PNG"/></div>
 </div><br/>  
 We're doing great, but again the non-perfect world is right around the corner. The content of the *.txt* files is not to the liking of YOLOv2. The left image displays what a *.txt* label generated by BBox Label Tool contains, the image to the right contains the data as expected by YOLOv2. The difference being that YOLOv2 wants every dimension relative to the dimensions of the image.  
-<br/><div id="center">  
+<br/><div id="center" style="height: 80px;">  
     <div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
     <img src="/static/content/images/2017/05/screen10.PNG"/></div><div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
     <img src="/static/content/images/2017/05/screen11.PNG"/></div>
@@ -156,7 +156,7 @@ for pathAndFilename in glob.iglob(os.path.join(current_dir, "*.jpg")):
 <p>Time to run this script!</p><center><code>python .\process.py</code></center> <br/>
 A small excerpt from the <em>train.txt</em> (left) and <em>test.txt</em> (right) files:  
 
-<div id="center">  
+<div id="center" style="height: 280px;">  
     <div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
     <img src="/static/content/images/2017/05/screen16.png"/></div><div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
     <img src="/static/content/images/2017/05/screen15.png"/></div>
@@ -234,14 +234,14 @@ backup = backup/
 
 <p>I picked some interesting images to showcase the performance of our detection setup. Images that haven't been used in training, we're not cheating here. As you can see, the results are very acceptable as every instance of the NFPA 'fire diamond' in the following images is correctly detected. Great succes!</p>
 
-<div id="center">  
+<div id="center" style="height: 300px;">  
     <div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
     <img src="/static/content/images/2017/05/prediction1.jpg"/></div><div style="width: 40%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
     <img src="/static/content/images/2017/05/prediction2.jpg"/></div>
 
 <p/></div><p/>
 
-<div id="center">  
+<div id="center" style="height: 450px;">  
     <div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
     <img src="/static/content/images/2017/05/prediction3.jpg"/></div><div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
     <img src="/static/content/images/2017/05/prediction4.jpg"/></div>
