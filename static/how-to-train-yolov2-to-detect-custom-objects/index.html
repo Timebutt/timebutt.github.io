@@ -1,0 +1,300 @@
+<html><head><meta charset="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>How to train YOLOv2 to detect custom objects</title><meta name="description" content=""/><meta name="HandheldFriendly" content="True"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><link rel="shortcut icon" href="/static/favicon.ico"/><link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400"/><link rel="stylesheet" type="text/css" href="/static/assets/css/screen.css?v=c848bca020"/><link rel="canonical" href="http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/"/><meta name="referrer" content="no-referrer-when-downgrade"/><link rel="amphtml" href="http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/amp/"/><meta property="og:site_name" content="Timebutt.io"/><meta property="og:type" content="article"/><meta property="og:title" content="How to train YOLOv2 to detect custom objects"/><meta property="og:description" content="In this article, we will be going over all the steps required to install and train Joseph Redmon's YOLOv2 state of the art real-time object detection system. Its technological prowess is explained in detail in the paper YOLO9000: Better, Faster, Stronger and on the project website. YOLOv2 is written for"/><meta property="og:url" content="http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/"/><meta property="article:published_time" content="2017-05-16T08:04:05.000Z"/><meta property="article:modified_time" content="2017-05-16T15:04:23.000Z"/><meta property="article:publisher" content="https://www.facebook.com/Timebutt"/><meta property="article:author" content="https://www.facebook.com/Timebutt"/><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="How to train YOLOv2 to detect custom objects"/><meta name="twitter:description" content="In this article, we will be going over all the steps required to install and train Joseph Redmon's YOLOv2 state of the art real-time object detection system. Its technological prowess is explained in detail in the paper YOLO9000: Better, Faster, Stronger and on the project website. YOLOv2 is written for"/><meta name="twitter:url" content="http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/"/><meta name="twitter:label1" content="Written by"/><meta name="twitter:data1" content="Nils Tijtgat"/><script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Timebutt.io",
+        "logo": "http://my-ghost-blog.com/ghost/img/ghosticon.jpg"
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Nils Tijtgat",
+        "image": "http://my-ghost-blog.com/content/images/2017/05/Nils-Tijtgat--resized--vierkant-.jpg",
+        "url": "http://my-ghost-blog.com/author/nils/",
+        "sameAs": [
+            "https://www.facebook.com/Timebutt"
+        ]
+    },
+    "headline": "How to train YOLOv2 to detect custom objects",
+    "url": "http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/",
+    "datePublished": "2017-05-16T08:04:05.000Z",
+    "dateModified": "2017-05-16T15:04:23.000Z",
+    "description": "In this article, we will be going over all the steps required to install and train Joseph Redmon&amp;#x27;s YOLOv2 state of the art real-time object detection system. Its technological prowess is explained in detail in the paper YOLO9000: Better, Faster, Stronger and on the project website. YOLOv2 is written for",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "http://my-ghost-blog.com"
+    }
+}
+    </script><meta name="generator" content="Ghost 0.11"/><link rel="alternate" type="application/rss+xml" title="Timebutt.io" href="http://my-ghost-blog.com/rss/index.rss"/></head><body class="post-template nav-closed">
+
+    <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul><li class="nav-home"><a href="https://timebutt.github.io/static/">Home</a></li>
+    </ul><a class="subscribe-button icon-feed" href="http://my-ghost-blog.com/rss/index.rss">Subscribe</a>
+</div>
+<span class="nav-cover"> </span>
+
+
+    <div class="site-wrapper">
+
+        
+
+
+<header class="main-header post-head no-cover"><nav class="main-nav  clearfix"><a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav></header><main class="content" role="main"><article class="post"><header class="post-header"><h1 class="post-title">How to train YOLOv2 to detect custom objects</h1>
+            <section class="post-meta"><time class="post-date" datetime="2017-05-16">16 May 2017</time></section></header><section class="post-content"><p>In this article, we will be going over all the steps required to install and train Joseph Redmon's <a href="https://pjreddie.com/darknet/yolo/">YOLOv2</a> state of the art real-time object detection system. Its technological prowess is explained in detail in the paper <em><a href="https://arxiv.org/abs/1612.08242">YOLO9000: Better, Faster, Stronger</a></em> and on the <a href="(https://pjreddie.com/darknet/yolo/">project website</a>.</p>
+
+<p>YOLOv2 is written for a Linux platform, but in this post we'll be looking at the Windows port by <a href="https://github.com/AlexeyAB">AlexeyAB</a>, which can be found on this <a href="https://github.com/AlexeyAB/darknet">Darknet GitHub repository</a>. All commands and steps described here can easily be reproduced on a Linux machine. While it is true AlexeyAB's GitHub page has a lot of documentation, I figured it would be worthwile to document a specific case study on how to train YOLOv2 to detect a custom object, and what  tools I use to set up the entire environment.</p>
+
+<p>The custom object we want to detect in this article is the NFPA 704 'fire diamond'.</p>
+
+<p><img src="/static/content/images/2017/05/NFPA_704.svg.png" style="width: 25%;"/></p>
+
+<p>The data set I composed for this article can be found <a href="../../content/other/NFPA_dataset.zip">here</a> (19.4Mb).</p>
+
+<p>To be able to follow all steps in this article, you'll need to have some software packages installed on your machine. I won't redo AlexeyAB's documentation, he lists the <a href="https://github.com/AlexeyAB/darknet#you-only-look-once-unified-real-time-object-detection-version-2">requirements</a> very clearly.</p>
+
+<h2 id="gettingdarknet">Getting Darknet</h2>
+
+<p>Maybe an obvious step, but included for completeness sake. Clone the Darknet GitHub repository for the platform of your choosing. As I explained, I will mainly focus on a Windows based approach, so open up a Git bash and clone AlexeyAB's repository:</p>
+
+<p/><center><code>git clone https://github.com/AlexeyAB/darknet.git</code></center>
+
+<h2 id="dataannotation">Data annotation</h2>
+
+<p>We are training a computer vision algorithm, so naturally we'll need images that it can train on. Generally, about 300 different images per category are required to be able to train for a decent detection. <a href="../../content/other/NFPA_dataset.zip">These</a> (19.4Mb) are the images I used, if you want to train for your own object you will have to compose your own training set.</p>
+
+<p>I use the <a href="https://github.com/puzzledqs/BBox-Label-Tool">BBox Label Tool</a> to annotate the training images. This Python 2.7 library allows us to easily generate the training data in the correct format YOLOv2 requires. So clone the GitHub repository and edit the <em>main.py</em> file to correctly reflect the folder where you have saved your training images. <a href="https://github.com/puzzledqs/BBox-Label-Tool/blob/master/main.py#L128">Line 128</a> is the one requiring our attention:</p>
+
+<pre><code style="font-size: 12px;">128            s = r'D:\workspace\python\labelGUI'
+129  ##        if not os.path.isdir(s):
+130  ##            tkMessageBox.showerror("Error!", message = "The specified dir doesn't exist!")
+131  ##            return
+</code></pre>
+
+<p>It doesn't really matter where you save your training images, just try to keep things organized because we'll have a lot of data all over the place soon. <br/>
+Next, let's fire up the tool. Seeing as how I have both <em>Python 3.6.0</em> and <em>Python 2.7.13</em> installed on my machine, I have to specify we will be using using Python 2.7 in my terminal:</p>
+
+<p/><center><code>python27 .\main.py</code></center>
+
+<p>The GUI of the BBox Label Tool will pop up, initially empty. Once we press the <em>Load</em> button, all images we have in our training data folder should be be loaded into the program, provided the script points to the correct folder. This is the first time you will probably notice we are not living in a perfect world: possibly a lot of images are be missing. Spoiler: the BBox Label Tool only looks for <em>.jpg</em> images, and no: not even <em>.jpeg</em> files will do. All of your <em>.png</em>, <em>.gif</em>, ... <em>you name it</em> files won't be there. Disaster!</p>
+
+<p><a href="https://sourceforge.net/projects/bulkimageconver/">Bulk Image Converter</a> to the rescue! Just launch it from anywhere, pick the folder where your images are at and convert whatever extensions you may have to <em>jpeg</em>. It does say <em>jpeg</em>, but they will be saved as <em>.jpg</em>.</p>
+
+<p><img src="/static/content/images/2017/05/screen7.PNG" alt=""/></p>
+
+<p>Since this is a Windows only tool, Linux users will have to find a different solution. A quick look around resulted in <a href="https://superuser.com/questions/71028/batch-converting-png-to-jpg-in-linux">this solution</a>, based on Imagemagick. I haven't tested this out myself though. <br/></p><center><code>mogrify -format jpg *.png</code></center>
+
+<p>Crisis averted! All of our images are ready for annotation. Relaunch the BBox Label Tool and check to see if all your training images have been correctly loaded. <br/><img src="/static/content/images/2017/05/screen6.PNG" alt=""/></p>
+
+<p>Now comes the hard and tedious work: labeling our entire training set. By clicking twice, we can create bounding boxes that should perfectly contain the object we want to detect. The above image illustrates this. Having two objects in the same image is no problem.</p>
+
+<p>We will be repeating this step a lot of times, but remember that the quality of your object detection greatly depends on this step. If you go about it too carelessly and indicate the bounding boxes wrong a lot of times (too much margin around the object, cutting pieces off of the object), the detected bounding box will be of poor quality. Do bear in mind, if you want to be able to detect 'partial' objects (when a sign is half covered by something else for instance), you will have to include images in your set that represent this as well. In that case, cutting corners off of some images is a good idea.</p>
+
+<p>Time to put on some good music and start labeling! Once you're done, the <em>main.py</em> script should have created the labels for your images in a folder <em>Labels/000</em>. If you are training multiple custom categories, every category will have its own folder.</p>
+
+<div id="center">  
+    <div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
+    <img src="/static/content/images/2017/05/screen9.PNG"/></div><div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
+    <img src="/static/content/images/2017/05/screen8.PNG"/></div>
+</div><br/>  
+We're doing great, but again the non-perfect world is right around the corner. The content of the *.txt* files is not to the liking of YOLOv2. The left image displays what a *.txt* label generated by BBox Label Tool contains, the image to the right contains the data as expected by YOLOv2. The difference being that YOLOv2 wants every dimension relative to the dimensions of the image.  
+<br/><div id="center">  
+    <div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
+    <img src="/static/content/images/2017/05/screen10.PNG"/></div><div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
+    <img src="/static/content/images/2017/05/screen11.PNG"/></div>
+</div>
+
+<p><br/><strong>BBox Label Tool:</strong> <br/><span style="font-size: 15px;"><em>[category number]<br/>[bounding box left X] [bounding box top Y] [bounding box right X] [bounding box bottom Y]</em></span></p>
+
+<p><strong>YOLOv2 format:</strong><br/><span style="font-size: 15px;"><em>[category number] [object center in X] [object center in Y] [object width in X] [object width in Y]</em></span></p>
+
+<p>The conversion between these two formats can be handled by <a href="https://github.com/Guanghan/darknet/blob/master/scripts/convert.py">this Python script</a>, written by Guanghan Ning. Just edit <a href="https://github.com/Guanghan/darknet/blob/master/scripts/convert.py#L34">Line 34</a> and <a href="https://github.com/Guanghan/darknet/blob/master/scripts/convert.py#L34">Line 35</a> to configure both in- and output path and we're good to go.</p>
+
+<p/><center><code>python .\convert.py</code></center><img src="/static/content/images/2017/05/screen13.PNG" style="width: 85%"/><p>Great! We now have a <em>.txt</em> file per image in the training set, telling YOLOv2 where the object we want to detect is at: our data set is completely annotated. Make sure both file types are in the same folder. The below image illustrates how the folder should look like by now:</p>
+
+<p><img src="/static/content/images/2017/05/screen14.PNG" alt=""/></p>
+
+<p>Ok, we're getting close to the point where our powerhouse GPU can start doing some serious number crunching. Next, we need to tell YOLOv2 what images form our actual training set, and what will serve as test set: the <em>test.txt</em> and <em>train.txt</em> files. I wrote a small <em>process.py</em> Python script that will create these files from the images found in the directory where it is run. The percentage of images to be used for test can be defined by changing the variable <em>percentage_test</em>. I don't have a GitHub repository up for my YOLOv2 experiments yet, so I'll just post the script here for now. The <em>path_data</em> variable indicates where images are located, relative to the <em>darknet.exe</em> executable, edit this as required.</p>
+
+<pre><code>import glob, os
+
+# Current directory
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Directory where the data will reside, relative to 'darknet.exe'
+path_data = 'data/obj/'
+
+# Percentage of images to be used for the test set
+percentage_test = 10;
+
+# Create and/or truncate train.txt and test.txt
+file_train = open('train.txt', 'w')  
+file_test = open('test.txt', 'w')
+
+# Populate train.txt and test.txt
+counter = 1  
+index_test = round(100 / percentage_test)  
+for pathAndFilename in glob.iglob(os.path.join(current_dir, "*.jpg")):  
+    title, ext = os.path.splitext(os.path.basename(pathAndFilename))
+    #file = open(title + '.txt', 'w')
+    #file.write('0 0.5 0.5 1 1')
+    #file.close()
+
+    if counter == index_test:
+        counter = 1
+        file_test.write(path_data + title + '.jpg' + "\n")
+    else:
+        file_train.write(path_data + title + '.jpg' + "\n")
+        counter = counter + 1
+</code></pre>
+
+<p>Time to run this script!</p><center><code>python .\process.py</code></center> <br/>
+A small excerpt from the <em>train.txt</em> (left) and <em>test.txt</em> (right) files:  
+
+<div id="center">  
+    <div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
+    <img src="/static/content/images/2017/05/screen16.png"/></div><div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
+    <img src="/static/content/images/2017/05/screen15.png"/></div>
+
+<p/></div><p/>
+
+<h2 id="preparingyolov2configurationfiles">Preparing YOLOv2 configuration files</h2>
+
+<p>YOLOv2 needs certain specific files to know how and what to train. We'll be creating these three files:</p>
+
+<ul><li><em>cfg/obj.data</em></li>
+<li><em>cfg/obj.names</em></li>
+<li><em>cfg/yolo-obj.cfg</em></li>
+</ul><p>First let's prepare the YOLOv2 <em>.data</em> and <em>.names</em> file. Let's start by creating <em>obj.data</em> and filling it with this content. This basically says that we are training one class, what the train and validation set files are and what file contains the names for the categories we want to detect.</p>
+
+<pre><code>classes= 1  
+train  = train.txt  
+valid  = test.txt  
+names = obj.names  
+backup = backup/  
+</code></pre>
+
+<p>The <em>obj.names</em> looks like this, plain and simple. Every new category should be on a new line, its line number should match the category number in the <em>.txt</em> label files we created earlier.</p>
+
+<pre><code>NFPA  
+</code></pre>
+
+<p>A final file we have to prepare (I know, powerful GPU eagerly waiting to start crunching!), is the <em>.cfg</em> file. I just duplicated the <em>yolo-voc.cfg</em> file, and made the following edits:</p>
+
+<ul><li><p>Line 3: set <code>batch=64</code>, this means we will be using 64 images for every training step</p></li>
+<li><p>Line 4: set <code>subdivisions=8</code>, the batch will be divided by 8 to decrease GPU VRAM requirements. If you have a powerful GPU with loads of VRAM, this number can be decreased, or batch could be increased. The training step will throw a <em>CUDA out of memory error</em> so you can adjust accordingly.</p></li>
+<li><p>Line 244: set <code>classes=1</code>, the number of categories we want to detect</p></li>
+<li><p>Line 237: set <code>filters=(classes + 5)*5</code> in our case <code>filters=30</code></p></li>
+</ul><p>To speed up training a bit, YOLOv2 offers convolutional weights that are pretrained on <a href="http://www.image-net.org/">Imagenet</a>. The <em>.weights</em> file from the <a href="https://pjreddie.com/darknet/imagenet/#extraction">Extraction</a> model can be <a href="https://pjreddie.com/media/files/darknet19_448.conv.23">downloaded</a> (76Mb) from the official YOLOv2 website. Different <em>.weights</em> configurations are available, depending on the application. Save the file in the same folder as where <em>darknet.exe</em> resides.</p>
+
+<h2 id="training">Training</h2>
+
+<p>Time for the fun part! Enter the following command into your terminal and watch your GPU do what it does best:</p>
+
+<p/><center><code>darknet.exe detector train cfg/obj.data cfg/yolo-obj.cfg darknet19_448.conv.23</code></center>
+
+<p>As you see, we put the <em>yolo-obj.cfg</em> and <em>obj.data</em> files in the <em>cfg</em> folder, to keep things organized. Your terminal should look something like this.</p>
+
+<p><img src="/static/content/images/2017/05/screen17.PNG" alt=""/></p>
+
+<p>Note: since I am running this on an NVIDIA GTX1080 Ti, I have changed the subdivisions to 4, because .... I can? The GPU 11GB GDDR5X of VRAM on board and can process big batches of images with ease. A really basic benchmark shows that the algorithm completes one training iteration in under 3 seconds when I have the subdivisions set to 4, as opposed to close to 3.5 seconds with the subidivision set to 8. Having the subdivision as low as your GPU allows will - judging from my very rudimental benchmark - reduce training time.</p>
+
+<p><strong>Edit</strong>: all of a sudden, I somehow got a <em>CUDA out of memory</em> error after 110 iterations. Weird ... I changed the subdivisions back to 8 to make sure the training is never interrupted.</p>
+
+<p>A screenshot from the <a href="https://www.msi.com/page/afterburner">MSI Afterburner</a> tool, showing the GPU under load during training:</p>
+
+<p><img src="/static/content/images/2017/05/screen18.PNG" style="width: 85%;"/></p>
+
+<p>AlexeyAB has a <a href="https://github.com/AlexeyAB/darknet#when-should-i-stop-training">very informative description</a> explaining when you should stop training the model. The average loss (error) value (marked bold in the line below) that gets reported after every training iteration should be as low as possible.</p>
+
+<p/><center><span style="font-size: 15px;">2: 2.950644, <strong>15.939886 avg</strong>, 0.001000 rate, 2.813000 seconds, 128 images</span></center>
+
+<p>The YOLOv2 training algorithm is configured this way, that weights are being saved into the <em>backup</em> folder every 100, 200, 300, 400, 500 and eventually every multiple of 1000 iterations. If training ever were to be interrupted, willingly or accidently, you can continue training from the last saved <em>.weights</em> file like so:</p>
+
+<p/><center><code>darknet.exe detector train cfg/obj.data cfg/yolo-obj.cfg yolo-obj_2000.weights</code></center>
+
+<p>After about one hour of training, I reached 1000 iterations and the average loss (error) was found to be 0.082204. Pretty damn fast if you ask me, this is one mighty powerful GPU! </p>
+
+<p><img src="/static/content/images/2017/05/screen19.png" alt=""/></p>
+
+<p>I will definitely train the model for a longer time to achieve an even higher accuracy, but for now will use the <em>yolo-obj_1000.weights</em> file in the results section to see how our model currently performs.</p>
+
+<h2 id="results">Results</h2>
+
+<p>We should now have a <em>.weights</em> file that represents our trained model. Let's use this on some images to see how well it can detect the NFPA 704 'fire diamond' pictogram. This command unleashes YOLOv2 on an image of our choosing:</p>
+
+<p/><center><code>darknet.exe detect cfg/yolo-obj.cfg yolo-obj_1000.weights data/test_image.jpg</code> </center>
+
+<p><img src="/static/content/images/2017/05/screen20.png" alt=""/></p>
+
+<p>I picked some interesting images to showcase the performance of our detection setup. Images that haven't been used in training, we're not cheating here. As you can see, the results are very acceptable as every instance of the NFPA 'fire diamond' in the following images is correctly detected. Great succes!</p>
+
+<div id="center">  
+    <div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
+    <img src="/static/content/images/2017/05/prediction1.jpg"/></div><div style="width: 40%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
+    <img src="/static/content/images/2017/05/prediction2.jpg"/></div>
+
+<p/></div><p/>
+
+<div id="center">  
+    <div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
+    <img src="/static/content/images/2017/05/prediction3.jpg"/></div><div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
+    <img src="/static/content/images/2017/05/prediction4.jpg"/></div>
+
+<p/></div><p/>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>In this article, we have extensively seen how we can train the very impressive YOLOv2 object detection algorithm to detect custom objects. Everything was tailored to one specific object, but it should be trivial to add more categories and retrain the model for them. The paper accompanying YOLOv2 proves the algorithm can handle over 9000 objects types, so you shouldn't run into a bottleneck any time soon.</p>
+
+<p>There, that's it for today. I will continue to update this article as required, feel free to post any question you may have below. Have fun training!</p>
+        </section><footer class="post-footer"><figure class="author-image"><a class="img" href="/static/author/nils/" style="background-image: url(/content/images/2017/05/Nils-Tijtgat--resized--vierkant-.jpg)"><span class="hidden">Nils Tijtgat's Picture</span></a>
+            </figure><section class="author"><h4><a href="/static/author/nils/">Nils Tijtgat</a></h4>
+
+                    <p>Read <a href="/static/author/nils/">more posts</a> by this author.</p>
+                <div class="author-meta">
+                    
+                    
+                </div>
+            </section><section class="share"><h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/intent/tweet?text=How%20to%20train%20YOLOv2%20to%20detect%20custom%20objects&amp;url=http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section></footer><div id="disqus_thread"/>
+        <script>
+
+        /**
+        *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+        *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+        /*
+        var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+        */
+        (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://timebutt.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+        })();
+        </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    </article></main><aside class="read-next"><a class="read-next-story prev no-cover" href="/static/using-a-phantom-dji-controller-in-airsim/">
+        <section class="post"><h2>Using a Phantom 2 DJI Controller in AirSim</h2>
+            <p>Flying a drone in AirSim requires a controller. One could use a simple game controller (Playstation or Xbox both…</p>
+        </section></a>
+</aside><footer class="site-footer clearfix"><section class="copyright"><a href="http://my-ghost-blog.com">Timebutt.io</a> © 2017</section><section class="poweredby">Proudly published with <a href="https://ghost.org">Ghost</a></section></footer></div>
+
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script><script type="text/javascript" src="/static/assets/js/jquery.fitvids.js?v=c848bca020"></script><script type="text/javascript" src="/static/assets/js/index.js?v=c848bca020"></script></body></html>
