@@ -28,7 +28,8 @@ from docopt import docopt
 from time import gmtime, strftime
 from git import Repo
 from pyquery import PyQuery
-
+from lxml import etree
+from io import StringIO, BytesIO
 
 def main():
     is_windows = os.name == 'nt'
@@ -84,11 +85,16 @@ def main():
         abs_url_regex = re.compile(r'^(?:[a-z]+:)?//', flags=re.IGNORECASE)
         def fixLinks(text, parser):
 
-            d = PyQuery(bytes(bytearray(text, encoding='utf-8')), parser=parser)
 
-            for element in d('a, link'):
-                e = PyQuery(element)
-                href = e.attr('href')
+            parser = etree.HTMLParser()
+            tree = etree.fromstring(text, parser)
+
+            # TO-DO: remove this shit
+
+            # edit all the <a> and <link> elements first
+            nodeList = tree.findall(".//a") + tree.findall(".//link")
+            for element in nodeList:
+                href = element.attrib['href']
 
                 if href is None:
                     continue
@@ -101,13 +107,16 @@ def main():
                     new_href = re.sub(r'/index\.html$', '/', new_href)
 
                 if href != new_href:
-                    e.attr('href', new_href)
-                    print "\t", href, "=>", new_href
+                    element.attrib['href'] = new_href
+                    print(str(href) + " => " + str(new_href))
 
-            # Make sure all scripts are referenced correctly
-            for element in d('script, img'):
-                e = PyQuery(element)
-                src = e.attr('src')
+            # Make sure all <script> and <img> elements are referenced correctly
+            nodeList = tree.findall(".//script") + tree.findall(".//img")
+            for element in nodeList:
+
+                if not 'src' in element.attrib:
+                    continue
+                src = element.attrib['src']
 
                 if src is None:
                     continue
@@ -117,13 +126,19 @@ def main():
                     new_src = "/static" + new_src
 
                 if src != new_src:
-                    e.attr('src', new_src)
-                    print "\t", src, "=>", new_src
+                    element.attrib['src'] = new_src
+                    print(str(src) + " => " + str(new_src))
+
+            # Fix to make code display correctly:
+            #for element in tree.findall(".//code"):
+            #    if not "\n" in element.text:
+            #        element.getparent().attrib['style'] = "text-align: center;"
 
             # Uncommented this because it seemed to remove the ending </html> tag for some reason
             #if parser == 'html':
             #     return d.html(method='html').encode('utf8')
-            return d.__unicode__().encode('utf8')
+
+            return etree.tostring(tree, pretty_print=True, method="html")
 
         # fix links in all html files
         scripts_reg = re.compile(r"(<script.*?/>)", re.IGNORECASE)
