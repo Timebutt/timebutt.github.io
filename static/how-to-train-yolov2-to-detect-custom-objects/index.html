@@ -1,4 +1,41 @@
-<html><head><meta charset="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>How to train YOLOv2 to detect custom objects</title><meta name="description" content=""/><meta name="HandheldFriendly" content="True"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><link rel="shortcut icon" href="/static/favicon.ico"/><link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400"/><link rel="stylesheet" type="text/css" href="/static/assets/css/screen.css?v=c848bca020"/><link rel="canonical" href="http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/"/><meta name="referrer" content="no-referrer-when-downgrade"/><link rel="amphtml" href="http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/amp/"/><meta property="og:site_name" content="Timebutt.io"/><meta property="og:type" content="article"/><meta property="og:title" content="How to train YOLOv2 to detect custom objects"/><meta property="og:description" content="In this article, we will be going over all the steps required to install and train Joseph Redmon's YOLOv2 state of the art real-time object detection system. Its technological prowess is explained in detail in the paper YOLO9000: Better, Faster, Stronger and on the project website. YOLOv2 is written for"/><meta property="og:url" content="http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/"/><meta property="article:published_time" content="2017-05-16T08:04:05.000Z"/><meta property="article:modified_time" content="2017-05-16T15:40:14.000Z"/><meta property="article:publisher" content="https://www.facebook.com/Timebutt"/><meta property="article:author" content="https://www.facebook.com/Timebutt"/><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="How to train YOLOv2 to detect custom objects"/><meta name="twitter:description" content="In this article, we will be going over all the steps required to install and train Joseph Redmon's YOLOv2 state of the art real-time object detection system. Its technological prowess is explained in detail in the paper YOLO9000: Better, Faster, Stronger and on the project website. YOLOv2 is written for"/><meta name="twitter:url" content="http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/"/><meta name="twitter:label1" content="Written by"/><meta name="twitter:data1" content="Nils Tijtgat"/><script type="application/ld+json">
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+    <title>How to train YOLOv2 to detect custom objects</title>
+    <meta name="description" content=""/>
+
+    <meta name="HandheldFriendly" content="True"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <link rel="shortcut icon" href="/static/favicon.ico"/>
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400"/>
+    <link rel="stylesheet" type="text/css" href="/static/assets/css/screen.css?v=a1ecb55c4f"/>
+
+
+    <link rel="canonical" href="http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/"/>
+    <meta name="referrer" content="no-referrer-when-downgrade"/>
+    <link rel="amphtml" href="http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/amp/"/>
+    
+    <meta property="og:site_name" content="Timebutt.io"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:title" content="How to train YOLOv2 to detect custom objects"/>
+    <meta property="og:description" content="In this article, we will be going over all the steps required to install and train Joseph Redmon's YOLOv2 state of the art real-time object detection system. Its technological prowess is explained in detail in the paper YOLO9000: Better, Faster, Stronger and on the project website. YOLOv2 is written for"/>
+    <meta property="og:url" content="http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/"/>
+    <meta property="article:published_time" content="2017-05-16T08:04:05.000Z"/>
+    <meta property="article:modified_time" content="2017-05-16T18:16:38.000Z"/>
+    <meta property="article:publisher" content="https://www.facebook.com/Timebutt"/>
+    <meta property="article:author" content="https://www.facebook.com/Timebutt"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="How to train YOLOv2 to detect custom objects"/>
+    <meta name="twitter:description" content="In this article, we will be going over all the steps required to install and train Joseph Redmon's YOLOv2 state of the art real-time object detection system. Its technological prowess is explained in detail in the paper YOLO9000: Better, Faster, Stronger and on the project website. YOLOv2 is written for"/>
+    <meta name="twitter:url" content="http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/"/>
+    <meta name="twitter:label1" content="Written by"/>
+    <meta name="twitter:data1" content="Nils Tijtgat"/>
+    
+    <script type="application/ld+json">
 {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -19,22 +56,29 @@
     "headline": "How to train YOLOv2 to detect custom objects",
     "url": "http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/",
     "datePublished": "2017-05-16T08:04:05.000Z",
-    "dateModified": "2017-05-16T15:40:14.000Z",
+    "dateModified": "2017-05-16T18:16:38.000Z",
     "description": "In this article, we will be going over all the steps required to install and train Joseph Redmon&amp;#x27;s YOLOv2 state of the art real-time object detection system. Its technological prowess is explained in detail in the paper YOLO9000: Better, Faster, Stronger and on the project website. YOLOv2 is written for",
     "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": "http://my-ghost-blog.com"
     }
 }
-    </script><meta name="generator" content="Ghost 0.11"/><link rel="alternate" type="application/rss+xml" title="Timebutt.io" href="http://my-ghost-blog.com/rss/index.rss"/></head><body class="post-template nav-closed">
+    </script>
+
+    <meta name="generator" content="Ghost 0.11"/>
+    <link rel="alternate" type="application/rss+xml" title="Timebutt.io" href="http://my-ghost-blog.com/rss/index.rss"/>
+</head>
+<body class="post-template nav-closed">
 
     <div class="nav">
     <h3 class="nav-title">Menu</h3>
     <a href="#" class="nav-close">
         <span class="hidden">Close</span>
     </a>
-    <ul><li class="nav-home"><a href="https://timebutt.github.io/static/">Home</a></li>
-    </ul><a class="subscribe-button icon-feed" href="http://my-ghost-blog.com/rss/index.rss">Subscribe</a>
+    <ul>
+            <li class="nav-home"><a href="https://timebutt.github.io/static/">Home</a></li>
+    </ul>
+        <a class="subscribe-button icon-feed" href="http://my-ghost-blog.com/rss/index.rss">Subscribe</a>
 </div>
 <span class="nav-cover"> </span>
 
@@ -44,9 +88,25 @@
         
 
 
-<header class="main-header post-head no-cover"><nav class="main-nav  clearfix"><a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
-    </nav></header><main class="content" role="main"><article class="post"><header class="post-header"><h1 class="post-title">How to train YOLOv2 to detect custom objects</h1>
-            <section class="post-meta"><time class="post-date" datetime="2017-05-16">16 May 2017</time></section></header><section class="post-content"><p>In this article, we will be going over all the steps required to install and train Joseph Redmon's <a href="https://pjreddie.com/darknet/yolo/">YOLOv2</a> state of the art real-time object detection system. Its technological prowess is explained in detail in the paper <em><a href="https://arxiv.org/abs/1612.08242">YOLO9000: Better, Faster, Stronger</a></em> and on the <a href="(https://pjreddie.com/darknet/yolo/">project website</a>.</p>
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        
+            <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">How to train YOLOv2 to detect custom objects</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2017-05-16">16 May 2017</time> 
+            </section>
+        </header>
+
+        <section class="post-content">
+            <p>In this article, we will be going over all the steps required to install and train Joseph Redmon's <a href="https://pjreddie.com/darknet/yolo/">YOLOv2</a> state of the art real-time object detection system. Its technological prowess is explained in detail in the paper <em><a href="https://arxiv.org/abs/1612.08242">YOLO9000: Better, Faster, Stronger</a></em> and on the <a href="(https://pjreddie.com/darknet/yolo/">project website</a>.</p>
 
 <p>YOLOv2 is written for a Linux platform, but in this post we'll be looking at the Windows port by <a href="https://github.com/AlexeyAB">AlexeyAB</a>, which can be found on this <a href="https://github.com/AlexeyAB/darknet">Darknet GitHub repository</a>. All commands and steps described here can easily be reproduced on a Linux machine. While it is true AlexeyAB's GitHub page has a lot of documentation, I figured it would be worthwile to document a specific case study on how to train YOLOv2 to detect a custom object, and what  tools I use to set up the entire environment.</p>
 
@@ -87,9 +147,11 @@ Next, let's fire up the tool. Seeing as how I have both <em>Python 3.6.0</em> an
 
 <p><img src="/static/content/images/2017/05/screen7.PNG" alt=""/></p>
 
-<p>Since this is a Windows only tool, Linux users will have to find a different solution. A quick look around resulted in <a href="https://superuser.com/questions/71028/batch-converting-png-to-jpg-in-linux">this solution</a>, based on Imagemagick. I haven't tested this out myself though. <br/></p><center><code>mogrify -format jpg *.png</code></center>
+<p>Since this is a Windows only tool, Linux users will have to find a different solution. A quick look around resulted in <a href="https://superuser.com/questions/71028/batch-converting-png-to-jpg-in-linux">this solution</a>, based on Imagemagick. I haven't tested this out myself though. <br/>
+</p><center><code>mogrify -format jpg *.png</code></center>
 
-<p>Crisis averted! All of our images are ready for annotation. Relaunch the BBox Label Tool and check to see if all your training images have been correctly loaded. <br/><img src="/static/content/images/2017/05/screen6.PNG" alt=""/></p>
+<p>Crisis averted! All of our images are ready for annotation. Relaunch the BBox Label Tool and check to see if all your training images have been correctly loaded. <br/>
+<img src="/static/content/images/2017/05/screen6.PNG" alt=""/></p>
 
 <p>Now comes the hard and tedious work: labeling our entire training set. By clicking twice, we can create bounding boxes that should perfectly contain the object we want to detect. The above image illustrates this. Having two objects in the same image is no problem.</p>
 
@@ -99,23 +161,32 @@ Next, let's fire up the tool. Seeing as how I have both <em>Python 3.6.0</em> an
 
 <div id="center" style="height: 165px;">  
     <div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
-    <img src="/static/content/images/2017/05/screen9.PNG"/></div><div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
-    <img src="/static/content/images/2017/05/screen8.PNG"/></div>
+    <img src="/static/content/images/2017/05/screen9.PNG"/>
+    </div><div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
+    <img src="/static/content/images/2017/05/screen8.PNG"/>
+    </div>
 </div><br/>  
 We're doing great, but again the non-perfect world is right around the corner. The content of the *.txt* files is not to the liking of YOLOv2. The left image displays what a *.txt* label generated by BBox Label Tool contains, the image to the right contains the data as expected by YOLOv2. The difference being that YOLOv2 wants every dimension relative to the dimensions of the image.  
-<br/><div id="center" style="height: 80px;">  
+<br/>  
+<div id="center" style="height: 80px;">  
     <div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
-    <img src="/static/content/images/2017/05/screen10.PNG"/></div><div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
-    <img src="/static/content/images/2017/05/screen11.PNG"/></div>
+    <img src="/static/content/images/2017/05/screen10.PNG"/>
+    </div><div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
+    <img src="/static/content/images/2017/05/screen11.PNG"/>
+    </div>
 </div>
 
-<p><br/><strong>BBox Label Tool:</strong> <br/><span style="font-size: 15px;"><em>[category number]<br/>[bounding box left X] [bounding box top Y] [bounding box right X] [bounding box bottom Y]</em></span></p>
+<p><br/><strong>BBox Label Tool:</strong> <br/>
+<span style="font-size: 15px;"><em>[category number]<br/>[bounding box left X] [bounding box top Y] [bounding box right X] [bounding box bottom Y]</em></span></p>
 
-<p><strong>YOLOv2 format:</strong><br/><span style="font-size: 15px;"><em>[category number] [object center in X] [object center in Y] [object width in X] [object width in Y]</em></span></p>
+<p><strong>YOLOv2 format:</strong><br/>
+<span style="font-size: 15px;"><em>[category number] [object center in X] [object center in Y] [object width in X] [object width in Y]</em></span></p>
 
 <p>The conversion between these two formats can be handled by <a href="https://github.com/Guanghan/darknet/blob/master/scripts/convert.py">this Python script</a>, written by Guanghan Ning. Just edit <a href="https://github.com/Guanghan/darknet/blob/master/scripts/convert.py#L34">Line 34</a> and <a href="https://github.com/Guanghan/darknet/blob/master/scripts/convert.py#L34">Line 35</a> to configure both in- and output path and we're good to go.</p>
 
-<p/><center><code>python .\convert.py</code></center><img src="/static/content/images/2017/05/screen13.PNG" style="width: 85%"/><p>Great! We now have a <em>.txt</em> file per image in the training set, telling YOLOv2 where the object we want to detect is at: our data set is completely annotated. Make sure both file types are in the same folder. The below image illustrates how the folder should look like by now:</p>
+<p/><center><code>python .\convert.py</code></center><img src="/static/content/images/2017/05/screen13.PNG" style="width: 85%"/>
+
+<p>Great! We now have a <em>.txt</em> file per image in the training set, telling YOLOv2 where the object we want to detect is at: our data set is completely annotated. Make sure both file types are in the same folder. The below image illustrates how the folder should look like by now:</p>
 
 <p><img src="/static/content/images/2017/05/screen14.PNG" alt=""/></p>
 
@@ -158,8 +229,10 @@ A small excerpt from the <em>train.txt</em> (left) and <em>test.txt</em> (right)
 
 <div id="center" style="height: 280px;">  
     <div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
-    <img src="/static/content/images/2017/05/screen16.png"/></div><div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
-    <img src="/static/content/images/2017/05/screen15.png"/></div>
+    <img src="/static/content/images/2017/05/screen16.png"/>
+    </div><div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
+    <img src="/static/content/images/2017/05/screen15.png"/>
+    </div>
 
 <p/></div><p/>
 
@@ -167,10 +240,13 @@ A small excerpt from the <em>train.txt</em> (left) and <em>test.txt</em> (right)
 
 <p>YOLOv2 needs certain specific files to know how and what to train. We'll be creating these three files:</p>
 
-<ul><li><em>cfg/obj.data</em></li>
+<ul>
+<li><em>cfg/obj.data</em></li>
 <li><em>cfg/obj.names</em></li>
 <li><em>cfg/yolo-obj.cfg</em></li>
-</ul><p>First let's prepare the YOLOv2 <em>.data</em> and <em>.names</em> file. Let's start by creating <em>obj.data</em> and filling it with this content. This basically says that we are training one class, what the train and validation set files are and what file contains the names for the categories we want to detect.</p>
+</ul>
+
+<p>First let's prepare the YOLOv2 <em>.data</em> and <em>.names</em> file. Let's start by creating <em>obj.data</em> and filling it with this content. This basically says that we are training one class, what the train and validation set files are and what file contains the names for the categories we want to detect.</p>
 
 <pre><code>classes= 1  
 train  = train.txt  
@@ -186,11 +262,14 @@ backup = backup/
 
 <p>A final file we have to prepare (I know, powerful GPU eagerly waiting to start crunching!), is the <em>.cfg</em> file. I just duplicated the <em>yolo-voc.cfg</em> file, and made the following edits:</p>
 
-<ul><li><p>Line 3: set <code>batch=64</code>, this means we will be using 64 images for every training step</p></li>
+<ul>
+<li><p>Line 3: set <code>batch=64</code>, this means we will be using 64 images for every training step</p></li>
 <li><p>Line 4: set <code>subdivisions=8</code>, the batch will be divided by 8 to decrease GPU VRAM requirements. If you have a powerful GPU with loads of VRAM, this number can be decreased, or batch could be increased. The training step will throw a <em>CUDA out of memory error</em> so you can adjust accordingly.</p></li>
 <li><p>Line 244: set <code>classes=1</code>, the number of categories we want to detect</p></li>
 <li><p>Line 237: set <code>filters=(classes + 5)*5</code> in our case <code>filters=30</code></p></li>
-</ul><p>To speed up training a bit, YOLOv2 offers convolutional weights that are pretrained on <a href="http://www.image-net.org/">Imagenet</a>. The <em>.weights</em> file from the <a href="https://pjreddie.com/darknet/imagenet/#extraction">Extraction</a> model can be <a href="https://pjreddie.com/media/files/darknet19_448.conv.23">downloaded</a> (76Mb) from the official YOLOv2 website. Different <em>.weights</em> configurations are available, depending on the application. Save the file in the same folder as where <em>darknet.exe</em> resides.</p>
+</ul>
+
+<p>To speed up training a bit, YOLOv2 offers convolutional weights that are pretrained on <a href="http://www.image-net.org/">Imagenet</a>. The <em>.weights</em> file from the <a href="https://pjreddie.com/darknet/imagenet/#extraction">Extraction</a> model can be <a href="https://pjreddie.com/media/files/darknet19_448.conv.23">downloaded</a> (76Mb) from the official YOLOv2 website. Different <em>.weights</em> configurations are available, depending on the application. Save the file in the same folder as where <em>darknet.exe</em> resides.</p>
 
 <h2 id="training">Training</h2>
 
@@ -202,7 +281,7 @@ backup = backup/
 
 <p><img src="/static/content/images/2017/05/screen17.PNG" alt=""/></p>
 
-<p>Note: since I am running this on an NVIDIA GTX1080 Ti, I have changed the subdivisions to 4, because .... I can? The GPU 11GB GDDR5X of VRAM on board and can process big batches of images with ease. A really basic benchmark shows that the algorithm completes one training iteration in under 3 seconds when I have the subdivisions set to 4, as opposed to close to 3.5 seconds with the subidivision set to 8. Having the subdivision as low as your GPU allows will - judging from my very rudimental benchmark - reduce training time.</p>
+<p>Note: since I am running this on an NVIDIA GTX1080 Ti, I have changed the subdivisions to 4, because .... I can? The GPU has 11GB GDDR5X of VRAM on board and can process big batches of images with ease. A really basic benchmark shows that the algorithm completes one training iteration in under 3 seconds when I have the subdivisions set to 4, as opposed to close to 3.5 seconds with the subidivision set to 8. Having the subdivision as low as your GPU allows will - judging from my very rudimental benchmark - reduce training time.</p>
 
 <p><strong>Edit</strong>: all of a sudden, I somehow got a <em>CUDA out of memory</em> error after 110 iterations. Weird ... I changed the subdivisions back to 8 to make sure the training is never interrupted.</p>
 
@@ -236,15 +315,19 @@ backup = backup/
 
 <div id="center" style="height: 300px;">  
     <div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
-    <img src="/static/content/images/2017/05/prediction1.jpg"/></div><div style="width: 40%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
-    <img src="/static/content/images/2017/05/prediction2.jpg"/></div>
+    <img src="/static/content/images/2017/05/prediction1.jpg"/>
+    </div><div style="width: 40%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
+    <img src="/static/content/images/2017/05/prediction2.jpg"/>
+    </div>
 
 <p/></div><p/>
 
 <div id="center" style="height: 450px;">  
     <div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
-    <img src="/static/content/images/2017/05/prediction3.jpg"/></div><div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
-    <img src="/static/content/images/2017/05/prediction4.jpg"/></div>
+    <img src="/static/content/images/2017/05/prediction3.jpg"/> 
+    </div><div style="width: 50%; height: 100%; display:inline-block; text-align: center; vertical-align:middle;">
+    <img src="/static/content/images/2017/05/prediction4.jpg"/>
+    </div>
 
 <p/></div><p/>
 
@@ -253,15 +336,28 @@ backup = backup/
 <p>In this article, we have extensively seen how we can train the very impressive YOLOv2 object detection algorithm to detect custom objects. Everything was tailored to one specific object, but it should be trivial to add more categories and retrain the model for them. The paper accompanying YOLOv2 proves the algorithm can handle over 9000 objects types, so you shouldn't run into a bottleneck any time soon.</p>
 
 <p>There, that's it for today. I will continue to update this article as required, feel free to post any question you may have below. Have fun training!</p>
-        </section><footer class="post-footer"><figure class="author-image"><a class="img" href="/static/author/nils/" style="background-image: url(/content/images/2017/05/Nils-Tijtgat--resized--vierkant-.jpg)"><span class="hidden">Nils Tijtgat's Picture</span></a>
-            </figure><section class="author"><h4><a href="/static/author/nils/">Nils Tijtgat</a></h4>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="/static/author/nils/" style="background-image: url(/content/images/2017/05/Nils-Tijtgat--resized--vierkant-.jpg)"><span class="hidden">Nils Tijtgat's Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href="/static/author/nils/">Nils Tijtgat</a></h4>
 
                     <p>Read <a href="/static/author/nils/">more posts</a> by this author.</p>
                 <div class="author-meta">
                     
                     
                 </div>
-            </section><section class="share"><h4>Share this post</h4>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
                 <a class="icon-twitter" href="https://twitter.com/intent/tweet?text=How%20to%20train%20YOLOv2%20to%20detect%20custom%20objects&amp;url=http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                     <span class="hidden">Twitter</span>
                 </a>
@@ -271,7 +367,12 @@ backup = backup/
                 <a class="icon-google-plus" href="https://plus.google.com/share?url=http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
                     <span class="hidden">Google+</span>
                 </a>
-            </section></footer><div id="disqus_thread"/>
+            </section>
+
+
+        </footer>
+
+        <div id="disqus_thread"/>
         <script>
 
         /**
@@ -289,12 +390,34 @@ backup = backup/
         s.setAttribute('data-timestamp', +new Date());
         (d.head || d.body).appendChild(s);
         })();
-        </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
-    </article></main><aside class="read-next"><a class="read-next-story prev no-cover" href="/static/using-a-phantom-dji-controller-in-airsim/">
-        <section class="post"><h2>Using a Phantom 2 DJI Controller in AirSim</h2>
+    </article>
+</main>
+
+<aside class="read-next">
+    <a class="read-next-story prev no-cover" href="/static/using-a-phantom-dji-controller-in-airsim/">
+        <section class="post">
+            <h2>Using a Phantom 2 DJI Controller in AirSim</h2>
             <p>Flying a drone in AirSim requires a controller. One could use a simple game controller (Playstation or Xbox both…</p>
-        </section></a>
-</aside><footer class="site-footer clearfix"><section class="copyright"><a href="http://my-ghost-blog.com">Timebutt.io</a> © 2017</section><section class="poweredby">Proudly published with <a href="https://ghost.org">Ghost</a></section></footer></div>
+        </section>
+    </a>
+</aside>
 
-    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script><script type="text/javascript" src="/static/assets/js/jquery.fitvids.js?v=c848bca020"></script><script type="text/javascript" src="/static/assets/js/index.js?v=c848bca020"></script></body></html>
+
+
+        <footer class="site-footer clearfix">
+            <section class="copyright"><a href="http://my-ghost-blog.com">Timebutt.io</a> © 2017</section>
+            <section class="poweredby">Proudly published with <a href="https://ghost.org">Ghost</a></section>
+        </footer>
+
+    </div>
+
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    
+    <script type="text/javascript" src="/static/assets/js/jquery.fitvids.js?v=a1ecb55c4f"></script>
+    <script type="text/javascript" src="/static/assets/js/index.js?v=a1ecb55c4f"></script>
+
+</body>
+</html>
