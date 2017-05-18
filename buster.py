@@ -22,8 +22,6 @@ import re
 import sys
 import fnmatch
 import shutil
-import SocketServer
-import SimpleHTTPServer
 from docopt import docopt
 from time import gmtime, strftime
 from git import Repo
@@ -85,11 +83,8 @@ def main():
         abs_url_regex = re.compile(r'^(?:[a-z]+:)?//', flags=re.IGNORECASE)
         def fixLinks(text, parser):
 
-
             parser = etree.HTMLParser()
             tree = etree.fromstring(text, parser)
-
-            # TO-DO: remove this shit
 
             # edit all the <a> and <link> elements first
             nodeList = tree.findall(".//a") + tree.findall(".//link")
@@ -134,10 +129,6 @@ def main():
             #    if not "\n" in element.text:
             #        element.getparent().attrib['style'] = "text-align: center;"
 
-            # Uncommented this because it seemed to remove the ending </html> tag for some reason
-            #if parser == 'html':
-            #     return d.html(method='html').encode('utf8')
-
             return etree.tostring(tree, pretty_print=True, method="html")
 
         # fix links in all html files
@@ -160,7 +151,7 @@ def main():
                     filepath = newfilepath
                 with open(filepath) as f:
                     filetext = f.read().decode('utf8')
-                print 'fixing links in ', filepath
+                print('fixing links in ' + str(filepath))
                 newtext = fixLinks(filetext, parser)
                 with open(filepath, 'w') as f:
 
@@ -171,16 +162,6 @@ def main():
                         newtext = newtext.replace(script_item, script_item[:-2] + "></script>")
 
                     f.write(newtext)
-
-    elif arguments['preview']:
-        os.chdir(static_path)
-
-        Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
-        httpd = SocketServer.TCPServer(("", 9000), Handler)
-
-        print "Serving at port 9000"
-        # gracefully handle interrupt here
-        httpd.serve_forever()
 
     elif arguments['setup']:
         if arguments['--gh-repo']:
@@ -216,7 +197,7 @@ def main():
         with open(file_path, 'w') as f:
             f.write('# Blog\nPowered by [Ghost](http://ghost.org) and [Buster](https://github.com/axitkhurana/buster/).\n')
 
-        print "All set! You can generate and deploy now."
+        print("All set! You can generate and deploy now.")
 
     elif arguments['deploy']:
         repo = Repo(static_path)
@@ -228,7 +209,7 @@ def main():
         origin = repo.remotes.origin
         repo.git.execute(['git', 'push', '-u', origin.name,
                          repo.active_branch.name])
-        print "Good job! Deployed to Github Pages."
+        print("Good job! Deployed to Github Pages.")
 
     elif arguments['add-domain']:
         repo = Repo(static_path)
@@ -238,10 +219,10 @@ def main():
         with open(file_path, 'w') as f:
             f.write(custom_domain + '\n')
 
-        print "Added CNAME file to repo. Use `deploy` to deploy"
+        print("Added CNAME file to repo. Use `deploy` to deploy")
 
     else:
-        print __doc__
+        print(__doc__)
 
 if __name__ == '__main__':
     main()

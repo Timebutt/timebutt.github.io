@@ -1130,6 +1130,12 @@ body.page-template .post-title {
    margin-bottom: 3.4rem;
 }
 
+span.code-center {
+     width: 100%;
+     text-align: center;
+     display: block;
+}
+
 .post-template .post-title,
 .page-template .post-title {
     margin-bottom: 0;
