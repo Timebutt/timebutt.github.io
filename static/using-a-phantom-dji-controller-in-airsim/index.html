@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="shortcut icon" href="/static/favicon.ico">
 <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic%7COpen+Sans:700,400">
-<link rel="stylesheet" type="text/css" href="/static/assets/css/screen.css?v=680266263b">
+<link rel="stylesheet" type="text/css" href="/static/assets/css/screen.css?v=a56a32fa8e">
 <link rel="canonical" href="http://my-ghost-blog.com/using-a-phantom-dji-controller-in-airsim/">
 <meta name="referrer" content="no-referrer-when-downgrade">
 <link rel="amphtml" href="http://my-ghost-blog.com/using-a-phantom-dji-controller-in-airsim/amp/">
@@ -18,7 +18,7 @@
 <meta property="og:description" content="Flying a drone in AirSim requires a controller. One could use a simple game controller (Playstation or Xbox both work, as per these instructions), but this is no ideal solution. I have tried this multiple times myself: these controllers are really 'noisy' and make it very difficult to fly a">
 <meta property="og:url" content="http://my-ghost-blog.com/using-a-phantom-dji-controller-in-airsim/">
 <meta property="article:published_time" content="2017-05-12T13:33:12.000Z">
-<meta property="article:modified_time" content="2017-05-16T15:04:49.000Z">
+<meta property="article:modified_time" content="2017-05-22T11:48:43.000Z">
 <meta property="article:publisher" content="https://www.facebook.com/Timebutt">
 <meta property="article:author" content="https://www.facebook.com/Timebutt">
 <meta name="twitter:card" content="summary">
@@ -48,7 +48,7 @@
     "headline": "Using a Phantom 2 DJI Controller in AirSim",
     "url": "http://my-ghost-blog.com/using-a-phantom-dji-controller-in-airsim/",
     "datePublished": "2017-05-12T13:33:12.000Z",
-    "dateModified": "2017-05-16T15:04:49.000Z",
+    "dateModified": "2017-05-22T11:48:43.000Z",
     "description": "Flying a drone in AirSim requires a controller. One could use a simple game controller (Playstation or Xbox both work, as per these instructions), but this is no ideal solution. I have tried this multiple times myself: these controllers are really &#x27;noisy&#x27; and make it very difficult to fly a",
     "mainEntityOfPage": {
         "@type": "WebPage",
@@ -82,21 +82,88 @@
     </nav></header><main class="content" role="main"><article class="post"><header class="post-header"><h1 class="post-title">Using a Phantom 2 DJI Controller in AirSim</h1>
             <section class="post-meta"><time class="post-date" datetime="2017-05-12">12 May 2017</time></section></header><section class="post-content"><p>Flying a drone in <a href="https://github.com/Microsoft/AirSim">AirSim</a> requires a controller. One could use a simple game controller (Playstation or Xbox both work, as per <a href="https://github.com/Microsoft/AirSim/blob/master/docs/xbox_controller.md">these instructions</a>), but this is no ideal solution. I have tried this multiple times myself: these controllers are really 'noisy' and make it very difficult to fly a drone carefully. Great tools to test the entire AirSim environment and for some first flights, but as soon as you are ready for 'serious work' you should really consider getting an RC controller of sorts. Not only are they a lot more precise, the longer sticks also offer a wider range to more subtly control the AirSim drone.</p>
 
-<p>During my UAV training, I was lucky enough to encounter an instructor who was very interested in the research we do at Ghent University and gifted me an old Phantom 2 controller that was lying around. After some online research, I found this very interesting Github project called <a href="https://github.com/Matsemann/mDjiController">mDjiController</a> by Matsemann. It does exactly what I hoped it would do: read the serial output from the Phantom 2 controller and send it to vJoy, simulating a joystick in Windows.</p>
+<p>Seeing as you are interested in drone simulations, odds are that you have a DJI controller lying around. Wouldn't it be great to use that as a controller for AirSim? My thought exactly when i looked at the Phantom 2 controller (NDJ6) I had lying around. After that thought, I found this very interesting Github project called <a href="https://github.com/Matsemann/mDjiController">mDjiController</a> by Matsemann. It does exactly what I hoped it would do: read the serial output from the Phantom 2 controller and send it to vJoy, simulating a joystick in Windows.</p>
 
-<p>In what follows, I will describe how I currently run my setup. This guide assumes you have already configured a working Unreal project with the AirSim plugin. If this is not the case, the AirSim documentation provides an excellent starting point when it comes to <a href="https://github.com/Microsoft/AirSim/blob/master/docs/build.md">installation</a> or <a href="https://github.com/Microsoft/AirSim/blob/master/docs/unreal_custenv.md">setting up your first project</a>.</p>
+<p>In what follows, I will describe how I currently run my setup on a Windows machine. This guide assumes you have already configured a working Unreal project with the AirSim plugin. If this is not the case, the AirSim documentation provides an excellent starting point when it comes to <a href="https://github.com/Microsoft/AirSim/blob/master/docs/build.md">installation</a> or <a href="https://github.com/Microsoft/AirSim/blob/master/docs/unreal_custenv.md">setting up your first project</a>. Linux users: I have not tested my setup in a Linux environment, but there's a good chance you can get it working just as easily as on Windows. If you do, please use the comment section to keep us all updated!</p>
 
-<p>First off, we'll need the <a href="http://vjoystick.sourceforge.net/site/">vJoy device driver</a>, that describes itself as <em>'bridging the gap between any device that is not a joystick and an application that requires a joystick'</em>. Grab the installer from the official website and get it installed on your machine. <br><img src="/static/content/images/2017/05/screen3.png" style="width: 60%;"></p>
+<h2 id="driverinstallation">Driver installation</h2>
 
-<p>We'll also need <a href="http://qgroundcontrol.com/">QGroundControl</a> that will bridge the gap between our simulated joystick and the simulated PX4 flight controller. Get the installer for your platform and install the software. We're getting close to flying fun!</p>
+<p>First off, we'll need the <a href="http://vjoystick.sourceforge.net/site/">vJoy device driver</a>, a piece of sofware describes itself as <em>'bridging the gap between any device that is not a joystick and an application that requires a joystick'</em>. Grab the installer from the official website and get it installed on your machine. <br><img src="/static/content/images/2017/05/screen3.png" style="width: 60%;"></p>
 
-<p>Next is to start the mDjiController <em>mDji.exe</em> executable. First specify the COM port your controller is connected to (can be found out in the Device Manager screen). Next, some configurable options come up. Just hit enter twice to confirm the default values, unless you want to run a custom vJoy configuration. <br><img src="/static/content/images/2017/05/screen-2.png" alt=""></p>
+<p>Next, let's get the software we need to talk to our '<em>not a joystick device</em>'. This task is fulfilled by the <em>simplified, wannabe driver</em> [sic] <a href="https://github.com/Matsemann/mDjiController">mDjiController</a>, found on GitHub and written by Matsemann. I made a <a href="https://github.com/Matsemann/mDjiController/pull/4">humble contribution</a> to this project to unleash the full potential of the Phantom 2 controller, adding functionality for all the buttons and camera scroll wheel. You can opt to <code>git clone</code> the repository and build the driver yourself, or simply grab the 64-bit Windows executable from <a href="https://github.com/Timebutt/mDjiController/releases/tag/v1.0">release v1.0 on my fork</a>.</p>
 
-<p>If all goes well, the driver should connect to the DJI controller over the serial port and start outputting values as can be seen below.</p>
+<p>To connect the controller to our computer over USB, we'll need the <a href="http://dl.djicdn.com/downloads/driver/DJI_WIN_Driver_Installer.exe">DJI USB driver</a>. If previous link should stop working, you can find it on the <a href="https://www.dji.com/phantom-2/info#downloads">Phantom 2 downloads page</a>.</p>
+
+<p><img src="/static/content/images/2017/05/qgroundcontrol.PNG" alt=""></p>
+
+<p>To wrap up, a final piece of software we need to get is <a href="http://qgroundcontrol.com/">QGroundControl</a>. This application will bridge the gap between our simulated joystick and the simulated PX4 flight controller. Get the installer for your platform and install the software if you don't already have it. Granted, we need a lot of different things installed but fear not: we're getting close to flying fun!</p>
+
+<h2 id="tryingitoutinairsim">Trying it out in AirSim</h2>
+
+<p>Ok, time to get everything rolling in <a href="https://github.com/Microsoft/AirSim">AirSim</a>. There is a specific order in which the different components required must be launched, in order for everything to work correctly. Having the mDjiController running before starting QGroundControl for instance, will prevent QGroundControl from starting at all (see screenshot below). I reported this erroneous behaviour in a <a href="https://github.com/mavlink/qgroundcontrol/issues/4963">GitHub issue</a>, no response from their team so far though.</p>
+
+<p><img src="/static/content/images/2017/05/qgroundcontrol_crash-1.png" alt=""></p>
+
+<p>In any case, this is the specific procedure that is guaranteed to successfully start the entire setup.</p>
+
+<ul>
+<li>Launch Unreal Editor project</li>
+<li>
+<em>SITL users</em>: start the Posix PX4 simulation</li>
+<li>Start the Unreal Project in 'AirSimGameMode'</li>
+<li>Start QGroundControl</li>
+<li>Initialize mDjiControl driver</li>
+<li>Fly!</li>
+</ul>
+<p>Ok, in what follows we'll see how previous steps look like at the hand of actual screen shots of the different applications. First off, let's start our Unreal Editor AirSim project. I'm assuming you have followed the <a href="https://github.com/Microsoft/AirSim/blob/master/docs/unreal_custenv.md">excellent documentation</a> available at the AirSim Github page to set up a custom Unreal project, so I won't go over that here. Let's open said project, you'll notice I already have the <em>Game Mode</em> set to <em>AirSimGameMode</em>.</p>
+
+<p><img src="/static/content/images/2017/05/unreal_project.png" alt=""></p>
+
+<p>The next step is optional step for those that are using a PX4 connected to their machine over USB. I'm not as fortunate to have one lying around, so I fire up my Bash On Windows (Windows users on a version prior to Windows 10 will have to run Ubuntu in VirtualBox or a different virtual machine), navigate to the folder where you have compiled the <a href="https://github.com/Microsoft/AirSim/blob/master/docs/sitl.md#software-in-loop-simulation-sitl">PX4 stack</a> and execute following command:</p>
+
+<p><span class="code-center"><code>./build<em>posix</em>sitl_default/src/firmware/posix/px4 ./posix-configs/SITL/init/ekf2/iris</code></span></p>
+
+<p><img src="/static/content/images/2017/05/posix_simulation.png" alt=""></p>
+
+<p>There, be it SITL or HITL user: we both have  a PX4 stack waiting for input from AirSim ;)</p>
+
+<p>On to the next, let's start the Unreal AirSim simulation, and verify that it connects correctly to the PX4.</p>
+
+<p><img src="/static/content/images/2017/05/airsim_simulation.png" alt=""></p>
+
+<p><img src="/static/content/images/2017/05/px4_connected.png" alt=""></p>
+
+<p>Ow, so close now! Let's fire up QGroundControl and verify it is connected (you should see the extended menu when you click the <em>configuration cogwheels</em> up top).</p>
+
+<p><img src="/static/content/images/2017/05/qgroundcontrol_connected.png" alt=""></p>
+
+<p>Now is he time to start the mDjiController <em>mDji.exe</em> executable. First specify the COM port your controller is connected to (you can find that out in the Device Manager screen). Some configurable options come up, just hit enter twice to confirm the default values unless you want to run a custom vJoy configuration.</p>
+
+<p><img src="/static/content/images/2017/05/screen-2.png" alt=""></p>
+
+<p>If all goes well, the driver should connect to the DJI controller over the serial port and start outputting values as can be seen below. Don't you just love a terminal blasting digits at high rate? If you disabled logging one step ago maybe it's not for you ;)</p>
 
 <p><img src="/static/content/images/2017/05/screen2.png" alt=""></p>
 
-<p>That's it!</p>
+<p>In QGroundControl, let's select the Joystick page.</p>
+
+<p><img src="/static/content/images/2017/05/qgroundcontrol_joystick.png" alt=""></p>
+
+<p>This is where you can calibrate and configure your controller. As can be seen from the screenshot, my controller still needs to be calibrated (all dots should be in the middle when the sticks are released). The calibration process is pretty straightforward.</p>
+
+<p>Second item to be noticed here, is the <em>Button actions</em> submenu. This is where we can define what the Phantom 2 toggle levers will trigger in the PX4 flight controller. I have mine set up to so that the left toggle arms or disarms the drone, and the right controls the different flight modes.</p>
+
+<p>Believe it or not: time to fly! Arm the drone using your newly configured controller and have at it. Isn't this environment breathtakingly beautiful?</p>
+
+<p><img src="/static/content/images/2017/05/airsim_flight-1.png" alt=""></p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>In this article, I have illustrated how to use a Phantom 2 controller to fly a drone in an AirSim simulation on a Windows machine. I haven't tested yet if the proposed <em>mDjiController</em> also works in a Linux environment. If you happen to test this, please use the comment section below to report your findings.</p>
+
+<p>If anything was unclear or incomplete, please let me know. If you liked this article and it helped you in your journeys, I'd be happy to find out! I will update the article with every suggestion that comes up.</p>
+
+<p>As a side remark: I have only verified the proposed approach with a DJI Phantom 2 controller. If other DJI controllers can be used the same way, I cannot say yet. I also own a DJI Matrice 100 controller that I am trying to set up, without success yet however. If you do find something out, we have created an issue <a href="https://github.com/Matsemann/mDjiController/issues/3">here</a> to join efforts in getting these or the M600 controllers working too. I have contacted DJI to find out if we can get stick values over USB, let's see what they report back.</p>
         </section><footer class="post-footer"><figure class="author-image"><a class="img" href="/static/author/nils/" style="background-image: url(/content/images/2017/05/Nils-Tijtgat--resized--vierkant-.jpg)"><span class="hidden">Nils Tijtgat's Picture</span></a>
             </figure><section class="author"><h4><a href="/static/author/nils/">Nils Tijtgat</a></h4>
 
@@ -143,6 +210,6 @@
 </aside><footer class="site-footer clearfix"><section class="copyright"><a href="http://my-ghost-blog.com">Timebutt.io</a> &#169; 2017</section><section class="poweredby">Proudly published with <a href="https://ghost.org">Ghost</a></section></footer>
 </div>
 
-    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script><script type="text/javascript" src="/static/assets/js/jquery.fitvids.js?v=680266263b"></script><script type="text/javascript" src="/static/assets/js/index.js?v=680266263b"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script><script type="text/javascript" src="/static/assets/js/jquery.fitvids.js?v=a56a32fa8e"></script><script type="text/javascript" src="/static/assets/js/index.js?v=a56a32fa8e"></script>
 </body>
 </html>
