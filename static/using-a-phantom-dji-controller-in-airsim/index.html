@@ -18,7 +18,7 @@
 <meta property="og:description" content="Flying a drone in AirSim requires a controller. One could use a simple game controller (Playstation or Xbox both work, as per these instructions), but this is no ideal solution. I have tried this multiple times myself: these controllers are really 'noisy' and make it very difficult to fly a">
 <meta property="og:url" content="http://my-ghost-blog.com/using-a-phantom-dji-controller-in-airsim/">
 <meta property="article:published_time" content="2017-05-12T13:33:12.000Z">
-<meta property="article:modified_time" content="2017-05-22T11:48:43.000Z">
+<meta property="article:modified_time" content="2017-05-23T07:37:23.000Z">
 <meta property="article:publisher" content="https://www.facebook.com/Timebutt">
 <meta property="article:author" content="https://www.facebook.com/Timebutt">
 <meta name="twitter:card" content="summary">
@@ -48,7 +48,7 @@
     "headline": "Using a Phantom 2 DJI Controller in AirSim",
     "url": "http://my-ghost-blog.com/using-a-phantom-dji-controller-in-airsim/",
     "datePublished": "2017-05-12T13:33:12.000Z",
-    "dateModified": "2017-05-22T11:48:43.000Z",
+    "dateModified": "2017-05-23T07:37:23.000Z",
     "description": "Flying a drone in AirSim requires a controller. One could use a simple game controller (Playstation or Xbox both work, as per these instructions), but this is no ideal solution. I have tried this multiple times myself: these controllers are really &#x27;noisy&#x27; and make it very difficult to fly a",
     "mainEntityOfPage": {
         "@type": "WebPage",
@@ -88,7 +88,7 @@
 
 <h2 id="driverinstallation">Driver installation</h2>
 
-<p>First off, we'll need the <a href="http://vjoystick.sourceforge.net/site/">vJoy device driver</a>, a piece of sofware describes itself as <em>'bridging the gap between any device that is not a joystick and an application that requires a joystick'</em>. Grab the installer from the official website and get it installed on your machine. <br><img src="/static/content/images/2017/05/screen3.png" style="width: 60%;"></p>
+<p>First off, we'll need the <a href="http://vjoystick.sourceforge.net/site/">vJoy device driver</a>, a piece of sofware that describes itself as <em>'bridging the gap between any device that is not a joystick and an application that requires a joystick'</em>. Grab the installer from the official website and get it installed on your machine. <br><img src="/static/content/images/2017/05/screen3.png" style="width: 60%;"></p>
 
 <p>Next, let's get the software we need to talk to our '<em>not a joystick device</em>'. This task is fulfilled by the <em>simplified, wannabe driver</em> [sic] <a href="https://github.com/Matsemann/mDjiController">mDjiController</a>, found on GitHub and written by Matsemann. I made a <a href="https://github.com/Matsemann/mDjiController/pull/4">humble contribution</a> to this project to unleash the full potential of the Phantom 2 controller, adding functionality for all the buttons and camera scroll wheel. You can opt to <code>git clone</code> the repository and build the driver yourself, or simply grab the 64-bit Windows executable from <a href="https://github.com/Timebutt/mDjiController/releases/tag/v1.0">release v1.0 on my fork</a>.</p>
 
@@ -119,7 +119,7 @@
 
 <p><img src="/static/content/images/2017/05/unreal_project.png" alt=""></p>
 
-<p>The next step is optional step for those that are using a PX4 connected to their machine over USB. I'm not as fortunate to have one lying around, so I fire up my Bash On Windows (Windows users on a version prior to Windows 10 will have to run Ubuntu in VirtualBox or a different virtual machine), navigate to the folder where you have compiled the <a href="https://github.com/Microsoft/AirSim/blob/master/docs/sitl.md#software-in-loop-simulation-sitl">PX4 stack</a> and execute following command:</p>
+<p>The next step is optional for those that are using a PX4 connected to their machine over USB. I'm not as fortunate to have one lying around, so I fire up my Bash On Windows (Windows users on a version prior to Windows 10 will have to run Ubuntu in VirtualBox or a different virtual machine), navigate to the folder where you have compiled the <a href="https://github.com/Microsoft/AirSim/blob/master/docs/sitl.md#software-in-loop-simulation-sitl">PX4 stack</a> and execute following command:</p>
 
 <p><span class="code-center"><code>./build<em>posix</em>sitl_default/src/firmware/posix/px4 ./posix-configs/SITL/init/ekf2/iris</code></span></p>
 
@@ -141,7 +141,7 @@
 
 <p><img src="/static/content/images/2017/05/screen-2.png" alt=""></p>
 
-<p>If all goes well, the driver should connect to the DJI controller over the serial port and start outputting values as can be seen below. Don't you just love a terminal blasting digits at high rate? If you disabled logging one step ago maybe it's not for you ;)</p>
+<p>If all goes well, the driver should connect to the DJI controller over the serial port and start outputting values as can be seen below. Don't you just love a terminal blasting digits at high rate? If you didn't accept the default values and disabled logging one step ago maybe it's not for you ;)</p>
 
 <p><img src="/static/content/images/2017/05/screen2.png" alt=""></p>
 
@@ -151,7 +151,7 @@
 
 <p>This is where you can calibrate and configure your controller. As can be seen from the screenshot, my controller still needs to be calibrated (all dots should be in the middle when the sticks are released). The calibration process is pretty straightforward.</p>
 
-<p>Second item to be noticed here, is the <em>Button actions</em> submenu. This is where we can define what the Phantom 2 toggle levers will trigger in the PX4 flight controller. I have mine set up to so that the left toggle arms or disarms the drone, and the right controls the different flight modes.</p>
+<p>Second item to be noticed here, is the <em>Button actions</em> submenu. This is where we can define what the Phantom 2 toggle levers will trigger in the PX4 flight controller. I have mine set up so that the left toggle arms or disarms the drone, and the right controls the different flight modes.</p>
 
 <p>Believe it or not: time to fly! Arm the drone using your newly configured controller and have at it. Isn't this environment breathtakingly beautiful?</p>
 
