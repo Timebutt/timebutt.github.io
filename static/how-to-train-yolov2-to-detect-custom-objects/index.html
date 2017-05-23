@@ -18,7 +18,7 @@
 <meta property="og:description" content="In this article, we will be going over all the steps required to install and train Joseph Redmon's YOLOv2 state of the art real-time object detection system. Its technological prowess is explained in detail in the paper YOLO9000: Better, Faster, Stronger and on the project website. YOLOv2 is written for">
 <meta property="og:url" content="http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/">
 <meta property="article:published_time" content="2017-05-16T08:04:05.000Z">
-<meta property="article:modified_time" content="2017-05-23T08:12:55.000Z">
+<meta property="article:modified_time" content="2017-05-23T09:07:55.000Z">
 <meta property="article:publisher" content="https://www.facebook.com/Timebutt">
 <meta property="article:author" content="https://www.facebook.com/Timebutt">
 <meta name="twitter:card" content="summary">
@@ -48,7 +48,7 @@
     "headline": "How to train YOLOv2 to detect custom objects",
     "url": "http://my-ghost-blog.com/how-to-train-yolov2-to-detect-custom-objects/",
     "datePublished": "2017-05-16T08:04:05.000Z",
-    "dateModified": "2017-05-23T08:12:55.000Z",
+    "dateModified": "2017-05-23T09:07:55.000Z",
     "description": "In this article, we will be going over all the steps required to install and train Joseph Redmon&#x27;s YOLOv2 state of the art real-time object detection system. Its technological prowess is explained in detail in the paper YOLO9000: Better, Faster, Stronger and on the project website. YOLOv2 is written for",
     "mainEntityOfPage": {
         "@type": "WebPage",
@@ -244,7 +244,7 @@ backup = backup/
 <li><p>Line 244: set <code>classes=1</code>, the number of categories we want to detect</p></li>
 <li><p>Line 237: set <code>filters=(classes + 5)*5</code> in our case <code>filters=30</code></p></li>
 </ul>
-<p>To speed up training a bit, YOLOv2 offers convolutional weights that are pretrained on <a href="http://www.image-net.org/">Imagenet</a>. The <em>.weights</em> file from the <a href="https://pjreddie.com/darknet/imagenet/#extraction">Extraction</a> model can be <a href="https://pjreddie.com/media/files/darknet19_448.conv.23">downloaded</a> (76Mb) from the official YOLOv2 website. Different <em>.weights</em> configurations are available, depending on the application. Save the file in the same folder as where <em>darknet.exe</em> resides.</p>
+<p>To start training, YOLOv2 requires a set of convolutional weights. To make things a little easier, Joseph offers a set that was pre-trained on <a href="http://www.image-net.org/">Imagenet</a>. This <em>conv.23</em> file can be <a href="https://pjreddie.com/media/files/darknet19_448.conv.23">downloaded</a> (76Mb) from the official YOLOv2 website and provides an excellent starting point. We'll need this file for the next step.</p>
 
 <h2 id="training">Training</h2>
 
@@ -266,8 +266,7 @@ backup = backup/
 
 <p>AlexeyAB has a <a href="https://github.com/AlexeyAB/darknet#when-should-i-stop-training">very informative description</a> explaining when you should stop training the model. The average loss (error) value (marked bold in the line below) that gets reported after every training iteration should be as low as possible.</p>
 
-<p></p>
-<center><span style="font-size: 15px;">2: 2.950644, <strong>15.939886 avg</strong>, 0.001000 rate, 2.813000 seconds, 128 images</span></center>
+<p><span class="code-center" style="font-size: 15px;">2: 2.950644, <strong>15.939886 avg</strong>, 0.001000 rate, 2.813000 seconds, 128 images</span></p>
 
 <p>The YOLOv2 training algorithm is configured this way, that weights are being saved into the <em>backup</em> folder every 100, 200, 300, 400, 500 and eventually every multiple of 1000 iterations. If training ever were to be interrupted, willingly or accidently, you can continue training from the last saved <em>.weights</em> file like so:</p>
 
