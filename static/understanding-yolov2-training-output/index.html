@@ -1,0 +1,182 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Understanding YOLOv2 training output</title>
+<meta name="description" content="">
+<meta name="HandheldFriendly" content="True">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="shortcut icon" href="/static/favicon.ico">
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic%7COpen+Sans:700,400">
+<link rel="stylesheet" type="text/css" href="/static/assets/css/screen.css?v=6ce352b7c5">
+<link rel="canonical" href="http://my-ghost-blog.com/understanding-yolov2-training-output/">
+<meta name="referrer" content="no-referrer-when-downgrade">
+<link rel="amphtml" href="http://my-ghost-blog.com/understanding-yolov2-training-output/amp/">
+<meta property="og:site_name" content="Timebutt.io">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Understanding YOLOv2 training output">
+<meta property="og:description" content="I was recently asked what the different parameters mean you see logged to your terminal while training and how we should interpret these. An interesting question I will try to explain here. Nothing more relevant to discuss than a real life example of a model I am currently training. For">
+<meta property="og:url" content="http://my-ghost-blog.com/understanding-yolov2-training-output/">
+<meta property="article:published_time" content="2017-06-07T10:16:56.000Z">
+<meta property="article:modified_time" content="2017-06-07T12:02:31.000Z">
+<meta property="article:publisher" content="https://www.facebook.com/Timebutt">
+<meta property="article:author" content="https://www.facebook.com/Timebutt">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Understanding YOLOv2 training output">
+<meta name="twitter:description" content="I was recently asked what the different parameters mean you see logged to your terminal while training and how we should interpret these. An interesting question I will try to explain here. Nothing more relevant to discuss than a real life example of a model I am currently training. For">
+<meta name="twitter:url" content="http://my-ghost-blog.com/understanding-yolov2-training-output/">
+<meta name="twitter:label1" content="Written by">
+<meta name="twitter:data1" content="Nils Tijtgat">
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Timebutt.io",
+        "logo": "http://my-ghost-blog.com/ghost/img/ghosticon.jpg"
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Nils Tijtgat",
+        "image": "http://my-ghost-blog.com/content/images/2017/05/Nils-Tijtgat--resized--vierkant-.jpg",
+        "url": "http://my-ghost-blog.com/author/nils/",
+        "sameAs": [
+            "https://www.facebook.com/Timebutt"
+        ]
+    },
+    "headline": "Understanding YOLOv2 training output",
+    "url": "http://my-ghost-blog.com/understanding-yolov2-training-output/",
+    "datePublished": "2017-06-07T10:16:56.000Z",
+    "dateModified": "2017-06-07T12:02:31.000Z",
+    "description": "I was recently asked what the different parameters mean you see logged to your terminal while training and how we should interpret these. An interesting question I will try to explain here. Nothing more relevant to discuss than a real life example of a model I am currently training. For",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "http://my-ghost-blog.com"
+    }
+}
+    </script><meta name="generator" content="Ghost 0.11">
+<link rel="alternate" type="application/rss+xml" title="Timebutt.io" href="http://my-ghost-blog.com/rss/index.rss">
+</head>
+<body class="post-template nav-closed">
+
+    <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+<li class="nav-home"><a href="https://timebutt.github.io/static/">Home</a></li>
+    </ul>
+<a class="subscribe-button icon-feed" href="http://my-ghost-blog.com/rss/index.rss">Subscribe</a>
+</div>
+<span class="nav-cover"> </span>
+
+
+    <div class="site-wrapper">
+
+        
+
+
+<header class="main-header post-head no-cover"><nav class="main-nav  clearfix"><a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav></header><main class="content" role="main"><article class="post"><header class="post-header"><h1 class="post-title">Understanding YOLOv2 training output</h1>
+            <section class="post-meta"><time class="post-date" datetime="2017-06-07">07 June 2017</time></section></header><section class="post-content"><p>I was recently asked what the different parameters mean you see logged to your terminal while training and how we should interpret these. An interesting question I will try to explain here.</p>
+
+<p>Nothing more relevant to discuss than a real life example of a model I am currently training. For reference, here's the <em>.cfg</em> file I used while training:</p>
+
+<p><img src="/static/content/images/2017/06/config.PNG" alt=""></p>
+
+<p>Next, a screenshot of the terminal output I am currently seeing:</p>
+
+<p><img src="/static/content/images/2017/06/Untitled-1.png" alt=""></p>
+
+<p>This entire iteration/block represents one <em>batch</em> of images, divided according to our <em>subdivisions</em>. Have a look at the <em>.cfg</em> file I provided earlier to verify that <code>batch = 64</code> and <code>subdivision = 8</code>. Looking at the image above, the training iteration has 8 groups of 8 images, reflecting these specific settings.</p>
+
+<h3 id="batchoutput">Batch output</h3>
+
+<p>Let's have a look at following line first, we'll break it down step by step. The output below is generated in <code>detector.c</code> on <a href="https://github.com/pjreddie/darknet/blob/56d69e73aba37283ea7b9726b81afd2f79cd1134/examples/detector.c#L136">this line of code</a>.</p>
+
+<p><img src="/static/content/images/2017/06/lastLine.png" alt=""></p>
+
+<ul>
+<li><p><code>9798</code> indicates the current training iteration/batch.</p></li>
+<li><p><code>0.370096</code> is the total loss.</p></li>
+<li><p><code>0.451929 avg</code> is the average loss error, which should be as low as possible. As a rule of thumb, once this reaches below <code>0.060730 avg</code>, you can stop training.</p></li>
+<li><p><code>0.001000 rate</code> represents the current learning rate, as defined in the <em>.cfg</em> file.</p></li>
+<li><p><code>3.300000 seconds</code> represents the total time spent to process this batch.</p></li>
+<li>The <code>627072 images</code> at the end of the line is nothing more than <code>9778 * 64</code>, the total amount of images used during training so far. </li>
+</ul>
+<h3 id="subdivisionoutput">Subdivision output</h3>
+
+<p>Before we analyze the subdivision output, let's have a look at <b>IOU</b> (Intersection over Union, also known as the <a href="https://en.wikipedia.org/wiki/Jaccard_index">Jaccard index</a>) to understand why this is an important parameter to log.</p>
+
+<p><img src="/static/content/images/2017/06/Intersection_over_Union_-_visual_equation-1.png" alt=""></p>
+
+<p>As you can see, IOU is a great metric to determine how accurately our model detected a certain object. At 100% we have a perfect detection: a perfect overlap of our bounding box and the target. It's clear that we want to optimize this parameter.</p>
+
+<p>With that out of the way, time to break down the first line, describing the results for one <em>batch</em> of images. For those that want to delve into the code themselves to verify my claims, <a href="https://github.com/pjreddie/darknet/blob/56d69e73aba37283ea7b9726b81afd2f79cd1134/src/region_layer.c#L306">this line of code</a> implements how the following line is written.</p>
+
+<p><img src="/static/content/images/2017/06/firstLine.png" alt=""></p>
+
+<ul>
+<li><p><code>Region Avg IOU: 0.326577</code> is the average of the IOU of every image in the current <em>subdivision</em>. A 32,66% overlap in this case, this model still requires further training.</p></li>
+<li><p><code>Class: 0.742537</code> <em>still figuring this out</em></p></li>
+<li><p><code>Obj: 0.033966</code> <em>still figuring this out</em></p></li>
+<li><p><code>No Obj: 0.000793</code> <em>still figuring this out</em></p></li>
+<li><p>The <code>Avg Recall: 0.12500</code> is defined in code as <code>recall/count</code>, and thus a metric for how many <em>positives</em> YOLOv2 detected out of the total amount of positives in this <em>subdivision</em>. In this case only one of the eight positives was correctly detected.</p></li>
+<li><p><code>count: 8</code> is the amount of <em>positives</em> (objects to be detected) present in the current subdivision of images (subdivision with size <code>8</code> in our case). Looking at the other lines in the log, you'll see there are also subdivision that only have <code>6</code> or <code>7</code> positives, indicating there are images in that subdivision that do not contain an object to be detected.</p></li>
+</ul>
+<h3 id="conclusion">Conclusion</h3>
+
+<p>In this short article, we've reviewed the different output parameters YOLOv2 uses to tell us how training is advancing. This is by no means an 'end-all' description, but should hopefully clear up most of the questions you may have when reviewing the training output.</p>
+
+<p>As always, I will gladly accept comments or questions in the comment section to further improve or correct this article. Feel free to comment!</p>
+        </section><footer class="post-footer"><figure class="author-image"><a class="img" href="/static/author/nils/" style="background-image: url(/content/images/2017/05/Nils-Tijtgat--resized--vierkant-.jpg)"><span class="hidden">Nils Tijtgat's Picture</span></a>
+            </figure><section class="author"><h4><a href="/static/author/nils/">Nils Tijtgat</a></h4>
+
+                    <p>Read <a href="/static/author/nils/">more posts</a> by this author.</p>
+                <div class="author-meta">
+                    
+                    
+                </div>
+            </section><section class="share"><h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/intent/tweet?text=Understanding%20YOLOv2%20training%20output&amp;url=http://my-ghost-blog.com/understanding-yolov2-training-output/" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://my-ghost-blog.com/understanding-yolov2-training-output/" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http://my-ghost-blog.com/understanding-yolov2-training-output/" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section></footer><div id="disqus_thread"></div>
+        <script>
+
+        /**
+        *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+        *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+        /*
+        var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+        */
+        (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://timebutt.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+        })();
+        </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+    </article></main><aside class="read-next"><a class="read-next-story prev no-cover" href="/static/how-to-train-yolov2-to-detect-custom-objects/">
+        <section class="post"><h2>How to train YOLOv2 to detect custom objects</h2>
+            <p>In this article, we will be going over all the steps required to install and train Joseph Redmon's YOLOv2&#8230;</p>
+        </section></a>
+</aside><footer class="site-footer clearfix"><section class="copyright"><a href="http://my-ghost-blog.com">Timebutt.io</a> &#169; 2017</section><section class="poweredby">Proudly published with <a href="https://ghost.org">Ghost</a></section></footer>
+</div>
+
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script><script type="text/javascript" src="/static/assets/js/jquery.fitvids.js?v=6ce352b7c5"></script><script type="text/javascript" src="/static/assets/js/index.js?v=6ce352b7c5"></script>
+</body>
+</html>
